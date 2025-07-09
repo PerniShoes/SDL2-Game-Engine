@@ -8,11 +8,6 @@ MouseHandler::MouseHandler()
 
 }
 
-MouseHandler::~MouseHandler()
-{
-
-
-}
 
 void MouseHandler::updateState()
 {
@@ -79,18 +74,30 @@ void MouseHandler::handleEvents(SDL_Event& e)
 	{
 		switch (e.button.button)
 		{
-		case SDL_BUTTON_LEFT: m_Buttons[(int)LeftButton] = Released; break;
-		case SDL_BUTTON_RIGHT: m_Buttons[(int)RightButton] = Released; break;
-		case SDL_BUTTON_MIDDLE: m_Buttons[(int)MiddleButton] = Released; break;
+		case SDL_BUTTON_LEFT: 
+			m_Buttons[(int)LeftButton] = Released; 
+			break;
+		case SDL_BUTTON_RIGHT: 
+			m_Buttons[(int)RightButton] = Released; 
+			break;
+		case SDL_BUTTON_MIDDLE: 
+			m_Buttons[(int)MiddleButton] = Released; 
+			break;
 		}
 	}
 	else if (e.type == SDL_MOUSEBUTTONDOWN)
 	{
 		switch (e.button.button)
 		{
-		case SDL_BUTTON_LEFT: m_Buttons[(int)LeftButton] = Pressed; break;
-		case SDL_BUTTON_RIGHT: m_Buttons[(int)RightButton] = Pressed; break;
-		case SDL_BUTTON_MIDDLE: m_Buttons[(int)MiddleButton] = Pressed; break;
+		case SDL_BUTTON_LEFT: 
+			m_Buttons[(int)LeftButton] = Pressed; 
+			break;
+		case SDL_BUTTON_RIGHT: 
+			m_Buttons[(int)RightButton] = Pressed; 
+			break;
+		case SDL_BUTTON_MIDDLE: 
+			m_Buttons[(int)MiddleButton] = Pressed; 
+			break;
 		}
 	}
 }
@@ -99,10 +106,18 @@ ButtonState MouseHandler::getButtonState(ButtonList button) const
 {
 	switch(button)
 	{
-	case LeftButton: return m_Buttons[(int)LeftButton]; break;
-	case RightButton: return m_Buttons[(int)RightButton]; break;
-	case MiddleButton: return m_Buttons[(int)MiddleButton]; break;
-	default: return TotalButtonStates;
+	case LeftButton: 
+		return m_Buttons[(int)LeftButton];
+		break;
+	case RightButton: 
+		return m_Buttons[(int)RightButton];
+		break;
+	case MiddleButton: 
+		return m_Buttons[(int)MiddleButton];
+		break;
+
+	default: 
+		return TotalButtonStates;
 	}
 }
 

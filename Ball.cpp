@@ -1,6 +1,5 @@
 #include "Ball.h"
 using enum Sides;
-using enum CollisionLinesId;
 
 Ball::Ball(SDL_Point startingPos, int width, int height, float velocity, bool velocityCapped)
 	: m_BallRect{ startingPos.x, startingPos.y, startingPos.x + width, startingPos.y + height },
@@ -161,7 +160,7 @@ void Ball::drawCollisionLines() const
 	SDL_Color green{ 0,255,0,255 };
 	SDL_Color red  { 255,0,0,255 };
 	SDL_SetRenderDrawColor(Renderer::GetRenderer(), green.r, green.g, green.b, green.a);
-	for (int i{ 0 }; i < TotalLines; i++)
+	for (int i{ 0 }; i < CollisionLinesIds::TotalLines; i++)
 	{
 		if (m_CollisionDetected[i] == true)
 		{
@@ -186,6 +185,7 @@ void Ball::setSize(int height, int width)
 
 void Ball::setCollisionLines()
 {
+	using namespace CollisionLinesIds;
 	// Collision line getting longer with speed
 	int lineLength{ int(m_Velocity /50.0f) };
 	// Lines go outwards from ball
@@ -226,7 +226,7 @@ void Ball::setPos(SDL_Point pos) // Debug
 
 void Ball::detectCollision(SDL_Rect* targetRect) 
 {
-
+	using namespace CollisionLinesIds;
 	if (targetRect != NULL)
 	{
 		
@@ -304,6 +304,7 @@ SDL_Point Ball::getPosition() const
 
 void Ball::handleCollision(SDL_Rect* targetRect)
 {
+	using namespace CollisionLinesIds;
 	detectCollision(targetRect);
 
 	// For now will not work well if ball is between stuff

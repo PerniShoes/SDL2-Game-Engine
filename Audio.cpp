@@ -2,17 +2,17 @@
 
 Audio::Audio()
 {
-    SetPaths();
+    setPaths();
 
 };
 
 Audio::~Audio()
 {
-    Free();
+    free();
     Mix_Quit();
 };
 
-void Audio::SetPaths()
+void Audio::setPaths()
 {
     // This needs to be better. Too much repetition 
     // No need to static_cast. C-style enum to int is safe)
@@ -45,7 +45,7 @@ void Audio::SetPaths()
 
 };
 
-void Audio::AdjustSoundVolume(int soundId, int volumePercentage)const
+void Audio::adjustSoundVolume(int soundId, int volumePercentage)const
 {
     float volumeMult{ (float)volumePercentage/100.0f };
 
@@ -62,42 +62,74 @@ void Audio::AdjustSoundVolume(int soundId, int volumePercentage)const
         break;
     }
 }
-void Audio::PlaySound(SoundsList soundId, int volumePercentage, int loopAmount, int channel) const
+void Audio::playSound(SoundsList soundId, int volumePercentage, int loopAmount, int channel) const
 {
     // No point in calling it every frame. Call it once or make it so you can pass volume in
-    AdjustSoundVolume((int)soundId, volumePercentage);
+    adjustSoundVolume((int)soundId, volumePercentage);
     Mix_PlayChannel(channel, m_Sound[static_cast<int>(soundId)], loopAmount);
     
 };
 
-void Audio::AdjustVolume(int musicId, int volumePercentage) const
+void Audio::adjustVolume(int musicId, int volumePercentage) const
 {
     float volumeMult{ (float)volumePercentage / 100.0f };
 
     switch (musicId)
     {
-    case 0:  Mix_VolumeMusic(int(m_Volume.DefaultMusic * volumeMult));      break;
-    case 1:  Mix_VolumeMusic(int(m_Volume.HolyF * volumeMult));             break;
-    case 2:  Mix_VolumeMusic(int(m_Volume.Pandemonium * volumeMult));       break;
-    case 3:  Mix_VolumeMusic(int(m_Volume.GimmeLove * volumeMult));         break;
-    case 4:  Mix_VolumeMusic(int(m_Volume.AreYouGonnaBeMyGirl* volumeMult));break;
-    case 5:  Mix_VolumeMusic(int(m_Volume.WezPigulke * volumeMult));        break;
-    case 6:  Mix_VolumeMusic(int(m_Volume.ALittleMessedUp * volumeMult));   break;
-    case 7:  Mix_VolumeMusic(int(m_Volume.BeautifulMadness * volumeMult));  break;
-    case 8:  Mix_VolumeMusic(int(m_Volume.ImComing * volumeMult));          break;
-    case 9:  Mix_VolumeMusic(int(m_Volume.ThatsWhatILike * volumeMult));    break;
-    case 10: Mix_VolumeMusic(int(m_Volume.Gold * volumeMult));              break;
-    case 11: Mix_VolumeMusic(int(m_Volume.Hold * volumeMult));              break;
-    case 12: Mix_VolumeMusic(int(m_Volume.EisenfunkPong * volumeMult));     break;
-    case 13: Mix_VolumeMusic(int(m_Volume.HeliosLexica * volumeMult));      break;
-    case 14: Mix_VolumeMusic(int(m_Volume.PressPlayMusic * volumeMult));    break;
+    case 0:  
+        Mix_VolumeMusic(int(m_Volume.DefaultMusic * volumeMult));      
+        break;
+    case 1:  
+        Mix_VolumeMusic(int(m_Volume.HolyF * volumeMult));             
+        break;
+    case 2:  
+        Mix_VolumeMusic(int(m_Volume.Pandemonium * volumeMult));       
+        break;
+    case 3:  
+        Mix_VolumeMusic(int(m_Volume.GimmeLove * volumeMult));         
+        break;
+    case 4:  
+        Mix_VolumeMusic(int(m_Volume.AreYouGonnaBeMyGirl* volumeMult));
+        break;
+    case 5:  
+        Mix_VolumeMusic(int(m_Volume.WezPigulke * volumeMult));        
+        break;
+    case 6:  
+        Mix_VolumeMusic(int(m_Volume.ALittleMessedUp * volumeMult));   
+        break;
+    case 7:  
+        Mix_VolumeMusic(int(m_Volume.BeautifulMadness * volumeMult));  
+        break;
+    case 8:  
+        Mix_VolumeMusic(int(m_Volume.ImComing * volumeMult));          
+        break;
+    case 9:  
+        Mix_VolumeMusic(int(m_Volume.ThatsWhatILike * volumeMult));    
+        break;
+    case 10: 
+        Mix_VolumeMusic(int(m_Volume.Gold * volumeMult));              
+        break;
+    case 11: 
+        Mix_VolumeMusic(int(m_Volume.Hold * volumeMult));              
+        break;
+    case 12: 
+        Mix_VolumeMusic(int(m_Volume.EisenfunkPong * volumeMult));     
+        break;
+    case 13: 
+        Mix_VolumeMusic(int(m_Volume.HeliosLexica * volumeMult));      
+        break;
+    case 14: 
+        Mix_VolumeMusic(int(m_Volume.PressPlayMusic * volumeMult));    
+        break;
 
-    default: Mix_VolumeMusic(int(64 * volumeMult)); break;
+    default: 
+        Mix_VolumeMusic(int(64 * volumeMult)); 
+        break;
     }
 
 
 };
-void Audio::PlayMusic(MusicList musicId, int volumePercentage, int loopAmount)
+void Audio::playMusic(MusicList musicId, int volumePercentage, int loopAmount)
 {
 
     if (musicId == StopMusic)
@@ -118,29 +150,29 @@ void Audio::PlayMusic(MusicList musicId, int volumePercentage, int loopAmount)
     else if(!Mix_PlayingMusic())
     {
         Mix_PlayMusic(m_Music[static_cast<int>(musicId)], loopAmount);
-        AdjustVolume(static_cast<int>(musicId), volumePercentage);
+        adjustVolume(static_cast<int>(musicId), volumePercentage);
     }
      
 };
 
-bool Audio::LoadAudio()
+bool Audio::loadAudio()
 {
     bool success = true;
 
     for (int i{ 0 }; i < static_cast<int>(TotalSounds); i++)
     {
-        success = LoadWAV(m_Sound[i], m_SoundPath[i]);
+        success = loadWAV(m_Sound[i], m_SoundPath[i]);
     }
 
     for (int i{ 0 }; i < static_cast<int>(TotalMusic); i++)
     {
-        success = LoadMusic(m_Music[i], m_MusicPath[i]);
+        success = loadMusic(m_Music[i], m_MusicPath[i]);
     }
 
 
     return success;
 };
-bool Audio::LoadWAV(Mix_Chunk* &soundStorage, const std::string& path) 
+bool Audio::loadWAV(Mix_Chunk* &soundStorage, const std::string& path) 
 {   
     bool success = true;
     soundStorage = Mix_LoadWAV(path.c_str());   
@@ -151,7 +183,7 @@ bool Audio::LoadWAV(Mix_Chunk* &soundStorage, const std::string& path)
     }
     return success;
 };
-bool Audio::LoadMusic(Mix_Music* &musicStorage, const std::string& path)
+bool Audio::loadMusic(Mix_Music* &musicStorage, const std::string& path)
 {
     bool success = true;
     musicStorage = Mix_LoadMUS(path.c_str());
@@ -165,7 +197,7 @@ bool Audio::LoadMusic(Mix_Music* &musicStorage, const std::string& path)
 };
 
 
-void Audio::Free()
+void Audio::free()
 {
     for (int i{ 0 }; i < static_cast<int>(TotalSounds); i++)
     {

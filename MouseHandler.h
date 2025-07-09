@@ -27,7 +27,7 @@ class MouseHandler
 {
 public:
     MouseHandler();
-    ~MouseHandler();
+    ~MouseHandler()=default; 
 
     void handleEvents(SDL_Event& e);
 

@@ -9,38 +9,42 @@
 
 enum class Sides
 {
-    NoCollision = -1,
+    NoCollision = -1, //NoCollision should probably be 0 (default)
     Left = 0,
     Right = 1,
     Bottom = 2,
     Top = 3,
 
-    SidesTotal = 4
+    SidesTotal 
 };
 
-enum CollisionLinesId
+namespace CollisionLinesIds
 {
-    // Collision detection assumes:
-    // -Even amount of lines per side
-    // -Lines in enum being in order: Left, Right, Top, Bottom
-    
-    // Vertical
-    LeftTop = 0,
-    LeftBottom = 1,
+    enum
+    {
+        // Collision detection assumes:
+        // -Even amount of lines per side
+        // -Lines in enum being in order: Left, Right, Top, Bottom
 
-    RightTop = 2,
-    RightBottom = 3,
+        // Vertical
+        LeftTop = 0,
+        LeftBottom = 1,
 
-    // Horizontal
-    TopLeft = 4,
-    TopRight = 5,
+        RightTop = 2,
+        RightBottom = 3,
 
-    BottomLeft = 6,
-    BottomRight = 7,
+        // Horizontal
+        TopLeft = 4,
+        TopRight = 5,
 
-    TotalLines = 8
+        BottomLeft = 6,
+        BottomRight = 7,
 
-};
+        TotalLines
+
+    };
+
+}
 
 enum class BallSoundEvents
 {
@@ -55,7 +59,7 @@ using enum BallSoundEvents;
 
 class Ball
 {
-
+    
 public:
     Ball(SDL_Point startingPos = {0, 0}, int width = 20, int height = 20, float velocity = 5.0f, bool velocityCapped = true);
     ~Ball();
@@ -105,8 +109,8 @@ private:
     };
 
     // Lines go outwards from ball
-    Line m_CollisionLines[TotalLines]{};
-    bool m_CollisionDetected[TotalLines];
+    Line m_CollisionLines[CollisionLinesIds::TotalLines]{};
+    bool m_CollisionDetected[CollisionLinesIds::TotalLines];
 
     Sides m_LastHitVert;
     Sides m_LastHitHorizontal;

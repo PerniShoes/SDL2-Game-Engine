@@ -108,8 +108,12 @@ void Player::handleEvent(SDL_Event& e)
         {
             switch (e.key.keysym.sym)
             {
-            case SDLK_UP: m_VelocityY -= m_Velocity; break;
-            case SDLK_DOWN: m_VelocityY += m_Velocity; break;
+            case SDLK_UP: 
+                m_VelocityY -= m_Velocity; 
+                break;
+            case SDLK_DOWN: 
+                m_VelocityY += m_Velocity; 
+                break;
                 //case SDLK_LEFT: m_VelocityX -= m_Velocity; break;
                 //case SDLK_RIGHT: m_VelocityX += m_Velocity; break;
             }
@@ -119,8 +123,12 @@ void Player::handleEvent(SDL_Event& e)
         {
             switch (e.key.keysym.sym)
             {
-            case SDLK_UP: m_VelocityY += m_Velocity; break;
-            case SDLK_DOWN: m_VelocityY -= m_Velocity; break;
+            case SDLK_UP: 
+                m_VelocityY += m_Velocity; 
+                break;
+            case SDLK_DOWN: 
+                m_VelocityY -= m_Velocity; 
+                break;
                 // case SDLK_LEFT: m_VelocityX += m_Velocity; break;
                 //case SDLK_RIGHT: m_VelocityX -= m_Velocity; break;
             }

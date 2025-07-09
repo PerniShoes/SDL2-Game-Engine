@@ -1,13 +1,13 @@
 #include "Game.h"
 
 Game::Game()
-	: m_Quit{ false }, m_E{ 0 }, m_Ball{ SDL_Point{900,300+ m_BorderGirth}, 20, 20, 700.0f, m_BallVelocityCapped },
+	: m_Quit{ false }, m_EventsQ{ 0 }, m_Ball{ SDL_Point{900,300+ m_BorderGirth}, 20, 20, 700.0f, m_BallVelocityCapped },
 	m_Player{ 0 + 40 - 10, 0 + m_BorderGirth, 5 }, 
-	m_EnemyAi{ int(Window::GetWindowSize().x - 50.0f), 0 + m_BorderGirth, m_AiDifficulty,m_AiDiffIncreasing }, m_MusicPlaying{ StopMusic }
+	m_EnemyAi{ int(Window::GetWindowSize().x - 50.0f), 0 + m_BorderGirth, m_AiDifficulty,m_AiDiffIncreasing }, m_MusicPlaying{ MusicList::StopMusic }
 
 	// fix initializer order, initalize everything
 {
-	if (m_Gamemode == EndlessMadness)
+	if (m_Gamemode == Gamemodes::EndlessMadness)
 	{
 		m_ScoreToWin = 69420;
 		m_EnemyAi.setDifficulty(DifficultySettings::unbeatable);
@@ -15,7 +15,8 @@ Game::Game()
 		m_BallSpeedIncrease = 1.02f;
 
 	}
-	
+
+
 };
 
 Game::~Game()
@@ -79,11 +80,11 @@ bool Game::SDLInit()
 	return success;
 };
 
-bool Game::LoadMedia()
+bool Game::loadMedia()
 {
 	bool success = true;
 	
-	success = m_Audio.LoadAudio();
+	success = m_Audio.loadAudio();
 	if (!success)
 	{
 		Debug::Print("Audio failed to initialize!\n");
@@ -98,48 +99,48 @@ bool Game::LoadMedia()
 	return success;
 };
 
-void Game::GameLoop()
+void Game::gameLoop()
 {
 
 	while (!m_Quit)
 	{
-		while (SDL_PollEvent(&m_E) != 0)
+		while (SDL_PollEvent(&m_EventsQ) != 0)
 		{
-			if (m_E.type == SDL_QUIT)
+			if (m_EventsQ.type == SDL_QUIT)
 			{
 				m_Quit = true;
 			}
 			else {
 
-				Events();
+				events();
 
 
 			}
 	
 		}
-		Logic();
-		Rendering();
+		logic();
+		rendering();
 	}
 
 
 };
 
-void Game::Events()
+void Game::events()
 {
-	m_Player.handleEvent(m_E);
+	m_Player.handleEvent(m_EventsQ);
 
-	HandleMouseEvents();
-	HandleKeyEvents();
+	handleMouseEvents();
+	handleKeyEvents();
 
 };
 
-void Game::HandleKeyEvents()
+void Game::handleKeyEvents()
 {
-	m_Player.handleEvent(m_E);
+	m_Player.handleEvent(m_EventsQ);
 	
-	if (m_E.type == SDL_KEYDOWN)
+	if (m_EventsQ.type == SDL_KEYDOWN)
 	{
-		switch (m_E.key.keysym.sym)
+		switch (m_EventsQ.key.keysym.sym)
 		{
 		case SDLK_r:
 			m_PlayerScore = 0;
@@ -159,27 +160,17 @@ void Game::HandleKeyEvents()
 
 };
 
-void Game::HandleMouseEvents()
+void Game::handleMouseEvents()
 {
-	m_Mouse.handleEvents(m_E);
+	m_Mouse.handleEvents(m_EventsQ);
 	
 };
 
-void Game::Logic()
+void Game::logic()
 {
+	using enum Gamemodes;
 	if (m_Gamemode == Survival)
 	{
-		// No point scores
-		// No ai
-		
-
-		// Stop ball until button is pressed to continue 
-		// Show final score, ball mult setting board shrinking settings also transparent yes or no
-		// and reset time
-		
-		// 
-		// Turn on wall on right
-
 		borderSizeHandling();
 		m_Mouse.updateState();
 		handleMusic();
@@ -197,7 +188,6 @@ void Game::Logic()
 
 	if (m_Gamemode == EndlessMadness)
 	{
-
 		borderSizeHandling();
 		m_Mouse.updateState();
 		handleMusic();
@@ -215,11 +205,6 @@ void Game::Logic()
 
 	if (m_Gamemode == Vs_Ai)
 	{
-		// Most basic mode
-		// No changes to score, ball mult or board shrinking
-		// Stop game if score reached
-		// Ai difficulty increasing OR staying the same
-		
 		borderSizeHandling();
 		m_Mouse.updateState();
 		handleMusic();
@@ -233,37 +218,31 @@ void Game::Logic()
 		textUILogic();
 		timerLogic();
 
-
 	}
-
-	//borderSizeHandling();
-	//m_Mouse.updateState();
-	//handleMusic();
-	//ballScoreHandling();
-
-	//handleSoundEvents();
-
-	//playerLogic();
-	//enemyLogic();
-	//ballLogic();
-	//textUILogic();
-	//timerLogic();
 
 };
 
 
-void Game::Rendering()
+void Game::rendering()
 {
 	SDL_Color black{ 0, 0, 0, 255 };
 	SDL_SetRenderDrawColor(Renderer::GetRenderer(), black.r, black.g, black.b, black.a);
 	SDL_RenderClear(Renderer::GetRenderer());
 
+	
+	using enum Gamemodes;
 	// Background:
 	switch (m_Gamemode) // Default case handling
 	{
-	case EndlessMadness:m_Textures.render(BackGroundBlackHole, true); break;
-	case Vs_Ai:			m_Textures.render(BackgroundDazzlingForest, true); break;
-	case Survival:		m_Textures.render(BackGroundSpace, true); break;
+	case EndlessMadness:
+		m_Textures.render(BackGroundBlackHole, true); 
+		break;
+	case Vs_Ai:			
+		m_Textures.render(BackgroundDazzlingForest, true); 
+		break;
+	case Survival:		
+		m_Textures.render(BackGroundSpace, true); 
+		break;
 	}
 	backGroundBrightness();
 	renderBoardBoarders();
@@ -294,7 +273,7 @@ void Game::Rendering()
 	SDL_RenderPresent(Renderer::GetRenderer());
 };
 
-void Game::Close()
+void Game::close()
 {
 	
 	m_Textures.~TextureHandler();
@@ -306,9 +285,15 @@ void Game::Close()
 
 void Game::borderSizeHandling()
 {
-	m_BoardBorderBottom = { 0,Window::GetWindowSize().y - m_BorderGirth,Window::GetWindowSize().x,Window::GetWindowSize().y };
-	m_BoardBorderTop = { 0,0,Window::GetWindowSize().x,   m_BorderGirth };
-	m_BoardBorderRightTest = { Window::GetWindowSize().x - m_BorderGirth,0+m_BorderGirth, Window::GetWindowSize().x,Window::GetWindowSize().y-m_BorderGirth*2 };
+	m_BoardBorderBottom = { 0,Window::GetWindowSize().y - m_BorderGirth,
+		Window::GetWindowSize().x,Window::GetWindowSize().y 
+	};
+	m_BoardBorderTop = { 0,0,Window::GetWindowSize().x, 
+		m_BorderGirth 
+	};
+	m_BoardBorderRightTest = { Window::GetWindowSize().x - m_BorderGirth,0+m_BorderGirth, 
+		Window::GetWindowSize().x,Window::GetWindowSize().y-m_BorderGirth*2 
+	};
 
 	float elapsedTime = 0.0f;
 	elapsedTime = ((m_Time.getTimePassedInMs() - m_LastTick) / 1000.0f);
@@ -319,11 +304,7 @@ void Game::borderSizeHandling()
 	m_LastTick = (float)m_Time.getTimePassedInMs();
 
 
-	if (m_BoardShrinkingSpeed <= 1)
-	{
-
-	}
-	else
+	if (m_BoardShrinkingSpeed > 1)
 	{
 		if (m_ShrinkSwitch)
 		{
@@ -357,7 +338,7 @@ void Game::renderBoardBoarders()
 	SDL_SetRenderDrawColor(Renderer::GetRenderer(), white.r, white.g, white.b, 100);
 	SDL_RenderFillRect(Renderer::GetRenderer(), &m_BoardBorderBottom);
 	SDL_RenderFillRect(Renderer::GetRenderer(), &m_BoardBorderTop);
-	if (m_Gamemode == Survival)
+	if (m_Gamemode == Gamemodes::Survival)
 	{
 		SDL_RenderFillRect(Renderer::GetRenderer(), &m_BoardBorderRightTest);
 	}
@@ -366,19 +347,21 @@ void Game::renderBoardBoarders()
 
 void Game::handleMusic()
 {
+	using enum Gamemodes;
+	using enum MusicList;
 	if (m_MusicPlaying == StopMusic)
 	{
 		if (m_Gamemode == EndlessMadness)
 		{
-			m_Audio.PlayMusic(EisenfunkPong, m_MusicVolume);
+			m_Audio.playMusic(EisenfunkPong, m_MusicVolume);
 		}
 		else if (m_Gamemode == Survival)
 		{
-			m_Audio.PlayMusic(HeliosLexica, m_MusicVolume);
+			m_Audio.playMusic(HeliosLexica, m_MusicVolume);
 		}
 		else
 		{
-			m_Audio.PlayMusic(PressPlayMusic, m_MusicVolume);
+			m_Audio.playMusic(PressPlayMusic, m_MusicVolume);
 		}
 	}
 
@@ -389,11 +372,10 @@ void Game::enemyLogic()
 	m_EnemyAi.setSize(m_Textures.getRect(EnemyPong)->h, m_Textures.getRect(EnemyPong)->w);
 	m_EnemyAi.move(m_BorderGirth, m_Ball.getPosition(), m_Ball.getVelocity());
 	m_Textures.setPos(EnemyPong, m_EnemyAi.getPosition());
-
 }
 void Game::playerLogic()
 {
-	if (m_Gamemode == EndlessMadness)
+	if (m_Gamemode == Gamemodes::EndlessMadness)
 	{
 		m_Textures.setScale(PongPlayer, 0.7f);
 		m_Player.setVelocity(600.0f);
@@ -408,23 +390,43 @@ void Game::playerLogic()
 
 	m_Player.move(m_BorderGirth        /*, true, m_Ball.getPosition(), m_Ball.getVelocity()   */      );
 	m_Textures.setPos(PongPlayer, m_Player.getPosition());
-
+	using enum PlatformColors;
 	switch (m_PlayerPlatformColor)
 	{
-	case Pwhite:m_Textures.setColor(PongPlayer, SDL_Color{ 255,255,255 }); break;
-	case Pred:m_Textures.setColor(PongPlayer, SDL_Color{ 255,0,0 }); break;
-	case Pblue:m_Textures.setColor(PongPlayer, SDL_Color{ 0,0,255 }); break;
-	case Pgreen:m_Textures.setColor(PongPlayer, SDL_Color{ 0,255,0 }); break;
-	case Pyellow:m_Textures.setColor(PongPlayer, SDL_Color{ 255,255,0 }); break;
-	case Ppink:m_Textures.setColor(PongPlayer, SDL_Color{ 255,51,204 }); break;
-	case Ppurple:m_Textures.setColor(PongPlayer, SDL_Color{ 153,0,204 }); break;
-	case PlightBlue:m_Textures.setColor(PongPlayer, SDL_Color{ 153,204,255 }); break;
-	case Porange:m_Textures.setColor(PongPlayer, SDL_Color{ 255,153,51 }); break;
-	case almostTransparent:m_Textures.setColor(PongPlayer, SDL_Color{ 255,255,255 });
+	case white:
+		m_Textures.setColor(PongPlayer, SDL_Color{ 255,255,255 }); 
+		break;
+	case red:
+		m_Textures.setColor(PongPlayer, SDL_Color{ 255,0,0 }); 
+		break;
+	case blue:
+		m_Textures.setColor(PongPlayer, SDL_Color{ 0,0,255 }); 
+		break;
+	case green:
+		m_Textures.setColor(PongPlayer, SDL_Color{ 0,255,0 }); 
+		break;
+	case yellow:
+		m_Textures.setColor(PongPlayer, SDL_Color{ 255,255,0 }); 
+		break;
+	case pink:
+		m_Textures.setColor(PongPlayer, SDL_Color{ 255,51,204 }); 
+		break;
+	case purple:
+		m_Textures.setColor(PongPlayer, SDL_Color{ 153,0,204 });
+		break;
+	case lightBlue:
+		m_Textures.setColor(PongPlayer, SDL_Color{ 153,204,255 }); 
+		break;
+	case orange:
+		m_Textures.setColor(PongPlayer, SDL_Color{ 255,153,51 }); 
+		break;
+	case almostTransparent:
+		m_Textures.setColor(PongPlayer, SDL_Color{ 255,255,255 });
 		m_Textures.setAlpha(PongPlayer, 5);
 		break;
 
 	}
+
 }
 void Game::ballLogic()
 {
@@ -443,7 +445,7 @@ void Game::ballLogic()
 	m_Ball.move(Sides::Top, Sides::Right);
 
 	m_Ball.handleCollision(m_Textures.getRect(EnemyPong));
-	if (m_Gamemode == Survival)
+	if (m_Gamemode == Gamemodes::Survival)
 	{
 		m_Ball.handleCollision(&m_BoardBorderRightTest);
 	}
@@ -485,26 +487,18 @@ void Game::handleScreenBrightness()
 
 void Game::scoreTextRendering()
 {
-	if (m_Gamemode != Survival)
+	if (m_Gamemode != Gamemodes::Survival)
 	{
 		// 9 being nine zeros in 2 147 483 647 (max score)
 		int spacing{ 0 };
 		int placeHolderCalc{ 0 };
 		placeHolderCalc = m_PlayerScore;
 
-		// Int overflow protection xd...
-		if (m_PlayerScore >= 2147483647)
-		{
-			m_PlayerScore = 0;
-		}
-		if (m_AiScore >= 2147483647)
-		{
-			m_AiScore = 0;
-		}
+		int maxScoreLength{ 9 };
 
-		for (int i{ 0 + 1 }; i < 9 + 1; i++)
+		for (int i{ 0 }; i < maxScoreLength; i++)
 		{
-			placeHolderCalc /= 10 * i;
+			placeHolderCalc /= 10 * i+1;
 			if (placeHolderCalc >= 1)
 			{
 				spacing = 1 * i;
@@ -541,28 +535,35 @@ void Game::netLineRendering()
 
 void Game::ballScoreHandling()
 {
+	using enum SoundsList;
 	if (m_Ball.getPosition().x >= Window::GetWindowSize().x +50)
 	{
 		m_Ball.restartBall();
 		m_PlayerScore += 1;
-		m_Audio.PlaySound(Score_sound, m_SoundVolume);
+		m_Audio.playSound(Score_sound, m_SoundVolume);
 	}
 	else if (m_Ball.getPosition().x < 0 - 50)
 	{
 		m_Ball.restartBall();
 		m_AiScore += 1;
-		m_Audio.PlaySound(Score_sound, m_SoundVolume);
+		m_Audio.playSound(Score_sound, m_SoundVolume);
 	}
 	
 }
 
 void Game::handleSoundEvents()
 {
+	using enum SoundsList;
 	switch ((int)m_Ball.handleSoundEvents())
 	{
-	case (int)PaddleHit: m_Audio.PlaySound(PaddleSoundEffect, m_SoundVolume); break;
-	case (int)WallHit: m_Audio.PlaySound(WallHitSoundEffect, m_SoundVolume); break;
-	default: break;
+	case (int)PaddleHit: 
+		m_Audio.playSound(PaddleSoundEffect, m_SoundVolume); 
+		break;
+	case (int)WallHit: 
+		m_Audio.playSound(WallHitSoundEffect, m_SoundVolume); 
+		break;
+	default: 
+		break;
 	}
 
 }
@@ -578,6 +579,7 @@ void Game::textUILogic()
 
 void Game::roundEndScreenRender()
 {
+	using enum Gamemodes;
 	float scale{ 3.0f };
 	m_Textures.setPos(EndScreenText, SDL_Point{ Window::GetWindowSize().x / 2- int(105*scale), Window::GetWindowSize().y / 2 -int(70*scale) });
 	m_Textures.setScale(EndScreenText, scale);
@@ -624,7 +626,7 @@ void Game::roundEndScreenRender()
 
 			
 			std::string transparent{ "No" };
-			if (m_PlayerPlatformColor == almostTransparent)
+			if (m_PlayerPlatformColor == PlatformColors::almostTransparent)
 			{
 				transparent = "Yes";
 			}
