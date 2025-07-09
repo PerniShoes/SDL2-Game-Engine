@@ -9,5 +9,5 @@ Working on a game engine, while learning SDL2.
 
 
 # Expanding and improving my existing engine
-Current task list:
+Current task list:  
 -Start 
