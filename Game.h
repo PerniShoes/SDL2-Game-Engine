@@ -26,45 +26,47 @@ enum class Gamemodes
 	Survival = 1,
 	EndlessMadness = 2,
 
-	TotalGamemodes = 3
+	TotalGamemodes
 };
-using enum Gamemodes;
 
 enum class PlatformColors
 {
 	almostTransparent = 0,
-	Pwhite = 1,
-	Pred = 2,
-	Pblue = 3,
-	Pgreen = 4,
-	Pyellow = 5,
-	Ppink = 6,
-	Ppurple = 7,
-	Porange = 8,
-	PlightBlue = 9,
+	white = 1,
+	red = 2,
+	blue = 3,
+	green = 4,
+	yellow = 5,
+	pink = 6,
+	purple = 7,
+	orange = 8,
+	lightBlue = 9,
 
-	TotalColors = 10
+	TotalColors 
 };
-using enum PlatformColors;
 
 class Game
 {
 	public:
-		Game(const Game&) = delete;
-		Game& operator = (const Game&) = delete;
 
-		Game();	
-		~Game();
+		Game(); 
+		Game(const Game&) = delete; // Copy constructor
+		Game& operator = (const Game&)  = delete; // Copy assignment
+		Game(Game&&) = delete;		// Move constructor
+		Game& operator = (const Game&&) = delete; // Move assignment
+		~Game(); // Set to default if not "used"
 
 		bool SDLInit();
-		bool LoadMedia();
-		void Close();
-		void GameLoop();	
+		bool loadMedia();
+		void close();
+		void gameLoop();	
 		
 	private:
+		//using enum PlatformColors;
+
 
 		// Game settings:
-		Gamemodes m_Gamemode = Vs_Ai;	// Vs_Ai Survival EndlessMadness (EndlessMadness overwrites some other settings)
+		Gamemodes m_Gamemode = Gamemodes::Vs_Ai;	// Vs_Ai Survival EndlessMadness (EndlessMadness overwrites some other settings)
 		// Ai: 
 		DifficultySettings m_AiDifficulty = DifficultySettings::medium; // easy medium hard veryHard unbeatable
 		bool m_AiDiffIncreasing = false;    // Ai increases in difficulty with time, up to veryHard
@@ -75,7 +77,7 @@ class Game
 		int m_BoardShrinkingSpeed = 1;		// Between 1-10 (or more if you want insanity). 1 = Off
 
 		// User settings:
-		PlatformColors m_PlayerPlatformColor = Ppink; // Pwhite Pred Pblue Pgreen Pyellow Ppink Ppurple Porange PlightBlue almostTransparent
+		PlatformColors m_PlayerPlatformColor = PlatformColors::pink; // Pwhite Pred Pblue Pgreen Pyellow Ppink Ppurple Porange PlightBlue almostTransparent
 		int m_MusicVolume = 10;		// Between 0 (silence) and 100 (MAX)
 		int m_SoundVolume = 30;		// Between 0 (silence) and 100 (MAX)
 		int m_ScreenBrightness = 0;	// Between 0 (Default brightness) and 255 (Complete darkness)
@@ -89,18 +91,18 @@ class Game
 		TextureHandler m_Textures;
 		MouseHandler m_Mouse;
 		TimeHandler m_Time;
-		SDL_Event m_E;
+		SDL_Event m_EventsQ;
 		// Made for Pong:
 		Player m_Player;
 		Ball m_Ball;
 		EnemyAi m_EnemyAi;
 
 		// Functions:
-		void Events();
-		void HandleMouseEvents();
-		void HandleKeyEvents();
+		void events();
+		void handleMouseEvents();
+		void handleKeyEvents();
 
-		void Logic();
+		void logic();
 		void ballScoreHandling();
 		void ballLogic();
 		void playerLogic();
@@ -112,7 +114,7 @@ class Game
 		void textUILogic();
 	
 
-		void Rendering();
+		void rendering();
 		void scoreTextRendering();
 		void netLineRendering();
 		void renderBoardBoarders();

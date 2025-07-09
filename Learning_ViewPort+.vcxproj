@@ -23,7 +23,7 @@
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="EnemyAi.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Main_file.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="MouseHandler.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="TextureHandler.cpp" />

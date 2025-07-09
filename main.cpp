@@ -2,31 +2,37 @@
 #include <crtdbg.h>
 #include "Game.h"
 
-Game GameInstance;		
+//Game GameInstance;		
 
 int main(int argc, char* args[])
 {
+	Game GameInstance;
+
+
+
 	if (!GameInstance.SDLInit())
 	{
 		Debug::Print("Failed to initialize!\n");
-		char stop{}; std::cin >> stop;
+		char stop{}; 
+		std::cin >> stop;
 	}
 	else
 	{
-		if (!GameInstance.LoadMedia())
+		if (!GameInstance.loadMedia())
 		{
 			Debug::Print("Failed to load media!\n");
-			char stop{}; std::cin >> stop;
+			char stop{}; 
+			std::cin >> stop;
 		}
 		else
 		{
 
-			GameInstance.GameLoop(); 
+			GameInstance.gameLoop();
 
-			GameInstance.Close();
+			GameInstance.close();
 			
 		}
 	}
 	
-	return 1;
+	return 0;
 };

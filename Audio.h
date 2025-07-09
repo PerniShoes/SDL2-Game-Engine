@@ -12,7 +12,7 @@ enum class SoundsList
 	Score_sound = 1,
 	WallHitSoundEffect = 2,
 
-	TotalSounds = 3
+	TotalSounds
 
 };
 
@@ -40,27 +40,28 @@ enum class MusicList
 	PressPlayMusic = 14,
 
 
-	TotalMusic = 15
+	TotalMusic 
 };
 
-using enum MusicList;
-using enum SoundsList;
 
 class Audio
 {
 public:
 	Audio();
-	~Audio();
-
+	
 	Audio(const Audio&) = delete;
 	Audio& operator = (const Audio&) = delete;
+	//Audio& operator = (const Audio&&);
+	//Audio(const Audio&&);
+
+	~Audio();
 
 	// ManualAdjustVolume(music/soundId Id, int volume);
 	// Add some "music player" functionality, Ui or just "next, previous, skip, etc"
 
-	bool LoadAudio();
-	void PlaySound(SoundsList soundId, int volumePercentage = 100, int loopAmount = 0, int channel = -1)const;
-	void PlayMusic(MusicList musicId, int volumePercentage = 100, int loopAmount = 10);
+	bool loadAudio();
+	void playSound(SoundsList soundId, int volumePercentage = 100, int loopAmount = 0, int channel = -1)const;
+	void playMusic(MusicList musicId, int volumePercentage = 100, int loopAmount = 10);
 
 	struct VolumeList
 	{
@@ -87,13 +88,15 @@ public:
 	}m_Volume;
 
 private:
+	using enum MusicList;
+	using enum SoundsList;
 
-	void AdjustSoundVolume(int soundId, int volumePercentage)const;
-	void AdjustVolume(int musicId, int volumePercentage) const;
-	void SetPaths();
-	bool LoadWAV(Mix_Chunk*& soundStorage, const std::string& path);
-	bool LoadMusic(Mix_Music*& musicStorage, const std::string& path);
-	void Free();
+	void adjustSoundVolume(int soundId, int volumePercentage)const;
+	void adjustVolume(int musicId, int volumePercentage) const;
+	void setPaths();
+	bool loadWAV(Mix_Chunk*& soundStorage, const std::string& path);
+	bool loadMusic(Mix_Music*& musicStorage, const std::string& path);
+	void free();
 
 	Mix_Chunk* m_Sound[(int)SoundsList::TotalSounds]{};	
 	const char* m_SoundPath[(int)TotalSounds]{};

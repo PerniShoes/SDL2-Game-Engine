@@ -43,7 +43,7 @@ enum class TextureList
 	RestartText = 11,
 	EndScreenText = 12,
 
-	TotalTextures = 13
+	TotalTextures 
 	
 };
 
@@ -55,7 +55,7 @@ enum class TexturesWithHitBox
 	HB_PongPlayer = 3,
 	HB_EnemyPong = 4,
 
-	HB_TotalTextures = 5
+	HB_TotalTextures 
 
 };
 using enum TexturesWithHitBox;
