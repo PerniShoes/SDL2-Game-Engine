@@ -1,5 +1,6 @@
 # SDL2 Game Engine
-Working on a game engine, while learning SDL2. 
+Working on my own game engine, while learning SDL2.  
+(Deserted for now in favor of learning more efficiently)  
 
 # Main goals:
 - Learning C++ and SDL2.  
@@ -7,7 +8,5 @@ Working on a game engine, while learning SDL2.
 - Audio, Textures, Proper Physics, Level editor, Sandbox-like capabilities)  
 - Modular code
 
-
 # Expanding and improving my existing engine
-Current task list:  
--Start 
+
